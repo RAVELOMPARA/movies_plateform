@@ -1,0 +1,22 @@
+/* style.css */
+
+.rounded-t-5 {
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.rounded-tr-lg-0 {
+  border-top-right-radius: 0;
+}
+
+.rounded-bl-lg-5 {
+  border-bottom-left-radius: 0.5rem;
+}
+
+.card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-content {
+  padding: 1rem 2rem;
+}

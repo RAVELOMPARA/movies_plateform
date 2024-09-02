@@ -1,14 +1,15 @@
-"use client"
+"use client";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Link from "next/link";
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+import Login from "./(auth)/login/page.jsx";
 
 export default function Home() {
   return (
     <main className="{styles.main}">
-      <Link href="/home">Home</Link>
-      <Link href="/cv">Cv</Link>
-      <br />
-      <Link href="/contact">Contact</Link>
+      <Login />
     </main>
   );
 }

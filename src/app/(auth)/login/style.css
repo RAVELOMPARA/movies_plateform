@@ -1,0 +1,6 @@
+/* style.css */
+
+.form-control-sm {
+  font-size: 0.875rem; /* Réduit la taille du texte */
+  padding: 0.375rem 0.75rem; /* Réduit le padding */
+}
