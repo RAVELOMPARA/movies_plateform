@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   TextField,
@@ -26,10 +26,34 @@ const FilmForm = () => {
   const [duration, setDuration] = useState("");
   const [releaseDate, setReleaseDate] = useState("");
   const [genre, setGenre] = useState("");
+  const [category, setCategory] = useState(""); // État pour la catégorie sélectionnée
+  const [categories, setCategories] = useState([]); // État pour stocker les catégories récupérées
   const [image, setImage] = useState(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Utilisez useEffect pour récupérer les catégories depuis Strapi
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:1337/api/categories",
+          {
+            headers: {
+              Authorization: `Bearer  2a6b1b8886327778865c2537b7f470617f5868d8b84f10725cade7e938a49fd61c717c9e3fc38b9fc3868213267dba85ff342dec042a44d1a04998e3871d7b454d053010f72cbabc753e50117888de5ec4df0a3f41cea99b7e71fb8524b48898e026a4968b11b9f4df5cc58a2f96f9baaac1ca6069210964f7b585448d044ebe`, // Remplacez par votre token API
+            },
+          }
+        );
+        setCategories(response.data.data); // Mettez à jour l'état avec les catégories récupérées
+      } catch (error) {
+        console.error("Erreur lors de la récupération des catégories :", error);
+        setError("Erreur lors de la récupération des catégories.");
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -46,6 +70,7 @@ const FilmForm = () => {
         duration,
         release_date: releaseDate,
         genre,
+        category, // Inclure la catégorie sélectionnée dans la requête
       })
     );
     if (image) {
@@ -54,23 +79,22 @@ const FilmForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:1337/api/films", // Remplacez par l'URL correcte
+        "http://localhost:1337/api/films",
         formData,
         {
           headers: {
-            Authorization: `Bearer 2a6b1b8886327778865c2537b7f470617f5868d8b84f10725cade7e938a49fd61c717c9e3fc38b9fc3868213267dba85ff342dec042a44d1a04998e3871d7b454d053010f72cbabc753e50117888de5ec4df0a3f41cea99b7e71fb8524b48898e026a4968b11b9f4df5cc58a2f96f9baaac1ca6069210964f7b585448d044ebe`, // Remplacez par votre token API
+            Authorization: `Bearer  2a6b1b8886327778865c2537b7f470617f5868d8b84f10725cade7e938a49fd61c717c9e3fc38b9fc3868213267dba85ff342dec042a44d1a04998e3871d7b454d053010f72cbabc753e50117888de5ec4df0a3f41cea99b7e71fb8524b48898e026a4968b11b9f4df5cc58a2f96f9baaac1ca6069210964f7b585448d044ebe`, // Remplacez par votre token API
             "Content-Type": "multipart/form-data",
           },
         }
       );
       setSuccess("Film ajouté avec succès !");
-      console.log("Film ajouté avec succès :", response.data);
-      // Réinitialisez le formulaire ou faites autre chose
       setTitre("");
       setDescription("");
       setDuration("");
       setReleaseDate("");
       setGenre("");
+      setCategory(""); // Réinitialiser la catégorie
       setImage(null);
     } catch (error) {
       console.error("Erreur lors de l'ajout du film :", error);
@@ -84,7 +108,7 @@ const FilmForm = () => {
     <StyledCard>
       <CardContent>
         <Typography variant="h4" gutterBottom>
-          Ajouter un Film
+          Ajouter un nouveau film
         </Typography>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
@@ -137,6 +161,44 @@ const FilmForm = () => {
                 value={genre}
                 onChange={(e) => setGenre(e.target.value)}
               />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                select
+                label=""
+                variant="outlined"
+                fullWidth
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                SelectProps={{
+                  native: true,
+                }}
+                InputProps={{
+                  style: {
+                    color: "black",
+                  },
+                }}
+              >
+                <option
+                  value=""
+                  style={{ color: "black", backgroundColor: "white" }}
+                >
+                  Sélectionner une catégorie
+                </option>
+                {categories.map((cat) => (
+                  <option
+                    key={cat.id}
+                    value={cat.id}
+                    style={{
+                      color: "black !important",
+                      backgroundColor: "green !important",
+                    }}
+                  >
+                      {cat.attributes.nom}
+                    
+                  </option>
+                ))}
+              </TextField>
             </Grid>
             <Grid item xs={12} md={6}>
               <input

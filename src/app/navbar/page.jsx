@@ -21,8 +21,7 @@ import "./navbar.css";
 import HdIcon from "@mui/icons-material/Hd";
 import LocalMoviesIcon from "@mui/icons-material/LocalMovies";
 import { useRouter } from "next/navigation";
-import { Button } from '@mui/material'; // For Material-UI
-import { Typography, Container } from "@mui/material";
+import { Button } from '@mui/material'; 
 
 const drawerWidth = 240;
 const openedMixin = (theme) => ({
@@ -122,6 +121,13 @@ export default function MiniDrawer({ children }) {
     router.push("/login");
   };
 
+  const categories = [
+    { name: "Animé", slug: "anime" },
+    { name: "Movie", slug: "movie" },
+    { name: "Serie", slug: "serie" },
+    { name: "Documentaire", slug: "documentaire" },
+  ];
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -150,7 +156,7 @@ export default function MiniDrawer({ children }) {
             </Link>
 
             <Button onClick={handleLogout} className="nav-items">
-              Déconnexion
+              LOG OUT
             </Button>
           </div>
         </Toolbar>
@@ -167,56 +173,63 @@ export default function MiniDrawer({ children }) {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Film", "Animation", "Série", "Documentaire"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
-              <ListItemButton
-                sx={[
-                  {
-                    minHeight: 48,
-                    px: 2.5,
-                  },
-                  open
-                    ? {
-                        justifyContent: "initial",
-                      }
-                    : {
-                        justifyContent: "center",
-                      },
-                ]}
-              >
-                <ListItemIcon
+          {categories.map((category, index) => (
+            <ListItem
+              key={category.slug}
+              disablePadding
+              sx={{ display: "block" }}
+            >
+              <Link className="list" href={`/category/${category.slug}`} passHref>
+                <ListItemButton
                   sx={[
                     {
-                      minWidth: 0,
-                      justifyContent: "center",
+                      minHeight: 48,
+                      px: 2.5,
                     },
                     open
                       ? {
-                          mr: 3,
+                          justifyContent: "initial",
                         }
                       : {
-                          mr: "auto",
+                          justifyContent: "center",
                         },
                   ]}
                 >
-                  {index % 2 === 0 ? <HdIcon /> : <LocalMoviesIcon />}
-                </ListItemIcon>
-                <ListItemText
-                  primary={text}
-                  sx={[
-                    open
-                      ? {
-                          opacity: 1,
-                        }
-                      : {
-                          opacity: 0,
-                        },
-                  ]}
-                />
-              </ListItemButton>
+                  <ListItemIcon
+                    sx={[
+                      {
+                        minWidth: 0,
+                        justifyContent: "center",
+                      },
+                      open
+                        ? {
+                            mr: 3,
+                          }
+                        : {
+                            mr: "auto",
+                          },
+                    ]}
+                  >
+                    {index % 2 === 0 ? <HdIcon /> : <LocalMoviesIcon />}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={category.name}
+                    sx={[
+                      open
+                        ? {
+                            opacity: 1,
+                          }
+                        : {
+                            opacity: 0,
+                          },
+                    ]}
+                  />
+                </ListItemButton>
+              </Link>
             </ListItem>
           ))}
         </List>
+
         <Divider />
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
@@ -234,26 +247,7 @@ export default function MiniDrawer({ children }) {
               ? theme.palette.grey[200]
               : theme.palette.grey[800],
         }}
-      >
-        <Container maxWidth="sm">
-          <Typography variant="body1">
-            Votre entreprise © {new Date().getFullYear()}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            <Link href="#" color="inherit">
-              Politique de confidentialité
-            </Link>{" "}
-            |{" "}
-            <Link href="#" color="inherit">
-              Conditions d'utilisation
-            </Link>{" "}
-            |{" "}
-            <Link href="#" color="inherit">
-              Contact
-            </Link>
-          </Typography>
-        </Container>
-      </Box>
+      ></Box>
     </Box>
   );
 }
